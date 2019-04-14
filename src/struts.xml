@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<package name="mp3" namespace="/" extends="struts-default">
+		<action name="ma_*" class="com.dangdang.action.Manager" method="{1}">
+			<result name="add.jsp">/add.jsp</result>
+			<result name="input">/error.jsp</result>
+		</action>
+	</package>	
+	<package name="mp1" namespace="/public" extends="struts-default">
+		<action name="books_*" class="com.dangdang.action.BooksAction" method="{1}">
+			<result name="toCategory.jsp">/main/category.jsp</result>
+			<result name="toRecommend.jsp">/main/recommend.jsp</result>
+			<result name="toHot.jsp">/main/hot.jsp</result>
+			<result name="toNew.jsp">/main/new.jsp</result>
+			<result name="toHotBoard.jsp">/main/hotBoard.jsp</result>
+			<result name="toProduct.jsp">/main/product.jsp</result>
+			<result name="toBookList.jsp">/main/book_list.jsp</result>
+		</action>
+		<action name="user_*" class="com.dangdang.action.UserAction" method="{1}">
+			<result name="toMain" type="redirect">/main/main.jsp</result>
+			<result name="toRegisterOk.jsp">/user/register_ok.jsp</result>
+			<result name="toVerify_form.jsp">/user/verify_form.jsp</result>
+			<result name="error">/error.jsp</result>
+		</action>
+	</package>
+	<package name="mp2" namespace="/private" extends="struts-default">
+		<action name="address_*" class="com.dangdang.action.AddressAction" method="{1}">
+			<result name="my_address.jsp">/address/my_address.jsp</result>
+			<result name="login.jsp">/user/login_form.jsp</result>
+			<result name="showAll" type="redirectAction">address_showAll</result>
+		</action>
+		<action name="cart_*" class="com.dangdang.action.ShoppingCartAction" method="{1}">
+			<result name="cartList.jsp">/cart/cart_list.jsp</result>
+			<result name="login.jsp">/user/login_form.jsp</result>
+			<result name="show" type="redirectAction">cart_show</result>
+		</action>
+		<action name="order_*" class="com.dangdang.action.OrderAction" method="{1}">
+			<result name="toAddress_form.jsp">/order/address_form.jsp</result>
+			<result name="toOrderOk">/order//order_ok.jsp</result>
+			<result name="toLogin.jsp">/user/login_form.jsp</result>
+			<result name="toOrderList.jsp">/order/my_order.jsp</result>
+			
+			<result name="pay_ok.jsp">/order/pay_ok.jsp</result>
+		</action>
+	</package>
+</struts>

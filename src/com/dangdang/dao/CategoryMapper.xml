@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dangdang.dao.CategoryMapper" >
+  <resultMap id="BaseResultMap" type="com.dangdang.entity.Category" >
+    <id column="CATEGORY_ID" property="categoryId" jdbcType="DECIMAL" />
+    <result column="CATEGORY_NAME" property="categoryName" jdbcType="VARCHAR" />
+    <result column="COUNT" property="count" jdbcType="DECIMAL" />
+    <association property="parentCategory" javaType="com.dangdang.entity.Category">
+    	<id column="parent_id" property="categoryId"/>
+    	<result column="parent_name" property="categoryName"/>
+    	<result column="parent_count" property="count"/>
+    </association>
+  </resultMap>
+  
+  <resultMap id="rootsMap" type="com.dangdang.entity.Category" >
+    <id column="CATEGORY_ID" property="categoryId" jdbcType="DECIMAL" />
+    <result column="CATEGORY_NAME" property="categoryName" jdbcType="VARCHAR" />
+    <result column="COUNT" property="count" jdbcType="DECIMAL" />
+    <collection property="childrenCategory" ofType="com.dangdang.entity.Category" javaType="java.util.List">
+    	<id column="children_id" property="categoryId"/>
+    	<result column="children_name" property="categoryName"/>
+    	<result column="children_count" property="count"/>
+    </collection>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    CATEGORY_ID, PARENT_ID, CATEGORY_NAME, COUNT
+  </sql>
+  
+<!-- 查二级标签 -->
+<select id="selectTwo" resultMap="BaseResultMap">
+	select * from category where category_id = #{0}
+</select>
+ <!--  查询一个一级标题 -->
+  <select id="selectOne" resultMap="rootsMap">
+  		select a.*,
+	       b.category_id   children_id,
+	       b.category_name children_name,
+	       b.count         children_count
+	  from category a
+	  left join category b
+	    on b.parent_id = a.category_id
+	 where a.parent_id is null
+	 and a.category_id = #{0}
+  </select>
+  
+  
+  <!-- 一级标题 -->
+  <select id="selectRoots" resultMap="rootsMap">
+	  	select a.*,
+	       b.category_id   children_id,
+	       b.category_name children_name,
+	       b.count         children_count
+	  from category a
+	  left join category b
+	    on b.parent_id = a.category_id
+	 where a.parent_id is null
+  	
+  </select>
+ <!--  二级标题 -->
+ <select id="selectBranches" resultMap="BaseResultMap">
+ 	select e.*,d.category_name parent_name,d.count parent_count from category e inner join category d
+		on e.parent_id = d.category_id
+ </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from CATEGORY
+    where CATEGORY_ID = #{categoryId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from CATEGORY
+    where CATEGORY_ID = #{categoryId,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.dangdang.entity.Category" >
+    insert into CATEGORY (CATEGORY_ID, PARENT_ID, CATEGORY_NAME, 
+      COUNT)
+    values (#{categoryId,jdbcType=DECIMAL}, #{parentId,jdbcType=DECIMAL}, #{categoryName,jdbcType=VARCHAR}, 
+      #{count,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dangdang.entity.Category" >
+    insert into CATEGORY
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="categoryId != null" >
+        CATEGORY_ID,
+      </if>
+      <if test="parentId != null" >
+        PARENT_ID,
+      </if>
+      <if test="categoryName != null" >
+        CATEGORY_NAME,
+      </if>
+      <if test="count != null" >
+        COUNT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=DECIMAL},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=DECIMAL},
+      </if>
+      <if test="categoryName != null" >
+        #{categoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null" >
+        #{count,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dangdang.entity.Category" >
+    update CATEGORY
+    <set >
+      <if test="parentId != null" >
+        PARENT_ID = #{parentId,jdbcType=DECIMAL},
+      </if>
+      <if test="categoryName != null" >
+        CATEGORY_NAME = #{categoryName,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null" >
+        COUNT = #{count,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where CATEGORY_ID = #{categoryId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dangdang.entity.Category" >
+    update CATEGORY
+    set PARENT_ID = #{parentId,jdbcType=DECIMAL},
+      CATEGORY_NAME = #{categoryName,jdbcType=VARCHAR},
+      COUNT = #{count,jdbcType=DECIMAL}
+    where CATEGORY_ID = #{categoryId,jdbcType=DECIMAL}
+  </update>
+</mapper>

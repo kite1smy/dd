@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dangdang.dao.AddressDao">
+	<resultMap type="com.dangdang.entity.Address" id="addressMap">
+		<id column="id" property="id"/>
+		<result column="receive_Name" property="receiveName"/>
+		<result column="address" property="address"/>
+		<result column="mobile" property="mobile"/>
+		<result column="delete_State" property="deleteState"/>
+		<result column="selected_State" property="selectedState"/>
+		<association property="user" javaType="com.dangdang.entity.User">
+			<id column="u_id" property="id"/>
+		</association>
+	</resultMap>
+	<select id="selectAll" resultMap="addressMap">
+		select * from address where u_id=#{id} and delete_state=0
+	</select>
+	<select id="selectOne" resultMap="addressMap">
+		select * from address where id=#{0}
+	</select>
+	<insert id="insert">
+		insert into address values(
+			0,#{receiveName},#{address},#{mobile},#{user.id},#{deleteState},#{selectedState}
+		)
+	</insert>
+	<update id="update">
+		update address set receive_Name=#{receiveName},address=#{address},mobile=#{mobile},u_id=#{user.id},
+		delete_State=#{deleteState},selected_State=#{selectedState} where id=#{id}
+	</update>
+	<update id="updateToZero">
+		update address set selected_State=0 where u_id=#{0}
+	</update>
+</mapper>

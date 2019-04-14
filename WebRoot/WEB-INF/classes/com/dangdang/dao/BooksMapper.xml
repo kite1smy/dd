@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dangdang.dao.BooksMapper">
+  <resultMap id="BaseResultMap" type="com.dangdang.entity.Books">
+    <id column="BOOK_ID" jdbcType="DECIMAL" property="bookId" />
+    <result column="BOOK_NAME" jdbcType="VARCHAR" property="bookName" />
+    <result column="BOOK_PRICE" jdbcType="DECIMAL" property="bookPrice" />
+    <result column="DANGPRICE" jdbcType="DECIMAL" property="dangPrice" />
+    <result column="BOOK_STATE" jdbcType="VARCHAR" property="bookState" />
+    <result column="INVENTORY" jdbcType="DECIMAL" property="inventory" />
+    <result column="AUTHOR" jdbcType="VARCHAR" property="author" />
+    <result column="CUSTOME_SCORE" jdbcType="DECIMAL" property="customeScore" />
+    <result column="PRODUCT_IMAGE" jdbcType="VARCHAR" property="productImage" />
+    <result column="SALENUM" jdbcType="DECIMAL" property="salenum" />
+     <association property="category" javaType="com.dangdang.entity.Category">
+    	<id column="CID" property="categoryId"/>
+    	<result column="CATEGORY_NAME" property="categoryName"/>
+    	<result column="COUNT" property="count"/>
+    	<association property="parentCategory" javaType="com.dangdang.entity.Category">
+    		<id column="PARENT_ID" property="categoryId"/>
+    		<result column="parent_name" property="categoryName"/>
+    		<result column="parent_count" property="count"/>
+    	</association>
+    </association>
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    BOOK_ID, CID, BOOK_NAME, BOOK_PRICE, DANG_PRICE, BOOK_STATE, INVENTORY, AUTHOR, CUSTOME_SCORE, 
+    PRODUCT_IMAGE, SALENUM
+  </sql>
+  <!-- 分页 -->
+  <select id="selectByPage" resultMap="BaseResultMap">
+  	select *
+	  from (select a.*,
+	               b.category_name parent_name,
+	               b.count         parent_count,
+	               c.*
+	          from category a
+	         inner join category b
+	            on a.parent_id = b.category_id
+	         right join book c
+	            on a.category_id = c.cid
+          <if test="level==1">
+         	where a.parent_id = #{categoryId}) e
+          </if>
+          <if test="level==2">
+        	 where a.category_id =#{categoryId}) e
+          </if>
+		 limit #{start} , #{end}	
+  </select>
+  
+  <select id="selectRecommend" resultMap="BaseResultMap">
+  	select * from book order by salenum limit 0,2
+  </select>
+  <select id="selectHot" resultMap="BaseResultMap">
+  	  select * from book order by salenum desc  limit 0,8
+  </select>
+  <select id="selectNew" resultMap="BaseResultMap">
+     select * from book order by book_id desc  limit 0,8
+ </select>
+   <select id="selectNewAndHot" resultMap="BaseResultMap">
+ 	   select * from book order by book_id desc,salenum desc
+		limit 0,8
+ </select>
+ 
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+   		select a.*,b.category_name parent_name,b.count parent_count,c.*
+  		from category a
+		 inner join category b
+		    on a.parent_id = b.category_id
+		 right join book c
+		    on a.category_id = c.cid
+		 where c.book_id = #{0}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from BOOK
+    where BOOK_ID = #{bookId,jdbcType=DECIMAL}
+  </delete>
+  
+  <insert id="insert" parameterType="com.dangdang.entity.Books">
+    insert into BOOK values
+  (0l,#{category.categoryId},#{bookName},#{bookPrice},#{dangPrice}, '上架',#{inventory}, #{author},4.7,#{productImage},20)
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.dangdang.entity.Books">
+    insert into BOOK
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="bookId != null">
+        BOOK_ID,
+      </if>
+      <if test="cid != null">
+        CID,
+      </if>
+      <if test="bookName != null">
+        BOOK_NAME,
+      </if>
+      <if test="bookPrice != null">
+        BOOK_PRICE,
+      </if>
+      <if test="dangPrice != null">
+        DANG_PRICE,
+      </if>
+      <if test="bookState != null">
+        BOOK_STATE,
+      </if>
+      <if test="inventory != null">
+        INVENTORY,
+      </if>
+      <if test="author != null">
+        AUTHOR,
+      </if>
+      <if test="customeScore != null">
+        CUSTOME_SCORE,
+      </if>
+      <if test="productImage != null">
+        PRODUCT_IMAGE,
+      </if>
+      <if test="salenum != null">
+        SALENUM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="bookId != null">
+        #{bookId,jdbcType=DECIMAL},
+      </if>
+      <if test="cid != null">
+        #{cid,jdbcType=DECIMAL},
+      </if>
+      <if test="bookName != null">
+        #{bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="bookPrice != null">
+        #{bookPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="dangPrice != null">
+        #{dangPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="bookState != null">
+        #{bookState,jdbcType=VARCHAR},
+      </if>
+      <if test="inventory != null">
+        #{inventory,jdbcType=DECIMAL},
+      </if>
+      <if test="author != null">
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="customeScore != null">
+        #{customeScore,jdbcType=DECIMAL},
+      </if>
+      <if test="productImage != null">
+        #{productImage,jdbcType=VARCHAR},
+      </if>
+      <if test="salenum != null">
+        #{salenum,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dangdang.entity.Books">
+    update BOOK
+    <set>
+      <if test="cid != null">
+        CID = #{cid,jdbcType=DECIMAL},
+      </if>
+      <if test="bookName != null">
+        BOOK_NAME = #{bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="bookPrice != null">
+        BOOK_PRICE = #{bookPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="dangPrice != null">
+        DANG_PRICE = #{dangPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="bookState != null">
+        BOOK_STATE = #{bookState,jdbcType=VARCHAR},
+      </if>
+      <if test="inventory != null">
+        INVENTORY = #{inventory,jdbcType=DECIMAL},
+      </if>
+      <if test="author != null">
+        AUTHOR = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="customeScore != null">
+        CUSTOME_SCORE = #{customeScore,jdbcType=DECIMAL},
+      </if>
+      <if test="productImage != null">
+        PRODUCT_IMAGE = #{productImage,jdbcType=VARCHAR},
+      </if>
+      <if test="salenum != null">
+        SALENUM = #{salenum,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where BOOK_ID = #{bookId,jdbcType=DECIMAL}
+  </update>
+	
+	<update id="updateInventory">
+		update book set inventory = #{1} where book_id = #{0} 
+	</update>
+  </mapper>

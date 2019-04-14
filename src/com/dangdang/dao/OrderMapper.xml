@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dangdang.dao.OrderDao">
+	
+	<resultMap type="com.dangdang.entity.Order" id="orderMap">
+		<id column="id" property="id"/>
+		
+		<result column="goodprice" property="goodPrice"/>
+		<result column="ordertime" property="orderTime"/>
+		<result column="orderstate" property="orderState"/>
+		
+		<association property="user" javaType="com.dangdang.entity.User">
+			<id column="user_id" property="id"/>
+		</association>
+		<association property="address" javaType="com.dangdang.entity.Address">
+			<id column="addr_id" property="id"/>
+		</association>
+		
+		<collection property="orderItemList" javaType="java.util.List" 
+		 ofType="com.dangdang.entity.OrderItem">
+			<id column="item_id" property="id"/>
+			
+			<result column="count" property="count"/>
+			<result column="amount" property="amount"/>
+			<result column="saveMoney" property="saveMoney"/>
+			
+			<association property="books" javaType="com.dangdang.entity.Books">
+				<id column="product_id" property="bookId"/>
+				<result column="book_name" property="bookName"/>
+				<result column="dang_price" property="dangPrice"/>
+				<result column="product_image" property="productImage"/>
+			</association>	
+		</collection>
+		
+	</resultMap>
+	
+	<!-- 查询所有订单 -->
+	<select id="selectAll" resultMap="orderMap">
+		select * from orders a left join order_item b on a.id = b.order_id
+		left join book on product_id = book_id
+	</select>
+	
+	<!-- 付款成功 -->
+	<update id="updatePayment">
+		update order set orderstate = 1 where id =#{0}
+	</update>
+	
+	
+	<!-- 生成订单 -->
+	<insert id="insertOrder">
+		<!-- <selectKey keyProperty="id" order="BEFORE" resultType="int">
+			select seq_order.nextval from dual
+		</selectKey> -->
+		insert into orders values (0, #{goodPrice}, sysdate(), #{orderState}, #{address.id}, #{user.id})
+	</insert>
+	<!-- 订单详情 -->
+	<insert id="insertItem">
+		insert into order_item values (0, #{books.bookId}, #{order.id}, #{count}, #{amount}, #{saveMoney})
+	</insert>
+	
+</mapper>
