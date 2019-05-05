@@ -4,6 +4,8 @@
   <resultMap id="BaseResultMap" type="com.dangdang.entity.Books">
     <id column="BOOK_ID" jdbcType="DECIMAL" property="bookId" />
     <result column="BOOK_NAME" jdbcType="VARCHAR" property="bookName" />
+    <result column="PRESS" jdbcType="VARCHAR" property="press" />
+    <result column="MESSAGES" jdbcType="VARCHAR" property="messages" />
     <result column="BOOK_PRICE" jdbcType="DECIMAL" property="bookPrice" />
     <result column="DANGPRICE" jdbcType="DECIMAL" property="dangPrice" />
     <result column="BOOK_STATE" jdbcType="VARCHAR" property="bookState" />

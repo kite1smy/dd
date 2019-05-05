@@ -52,6 +52,7 @@ public class OrderAction extends ActionSupport{
 	//�յ���ַ��ţ����ɶ���
 	public String createOrder(){
 		//�����û���Ϣ
+		System.err.println(session);
 		order.setUser((User)session.get("user"));
 		//��ַ��Ϣ���ύ
 		

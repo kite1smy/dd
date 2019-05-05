@@ -22,9 +22,9 @@
 					<h4>
 						作者：
 						<s:property value="author" />
-						著 <br /> 出版社：×××&nbsp;&nbsp;&nbsp;&nbsp;出版时间：2006-7-1
+						著 <br /> 出版社：<s:property value="press"/>&nbsp;&nbsp;&nbsp;&nbsp;出版时间：2006-7-1
 					</h4>
-					<h5>简介 <s:property value="messages" /></h5>
+					<h5>简介: &nbsp;<s:property value="messages" /></h5>
 					<h6>
 						定价：￥
 						<s:property value="bookPrice" />

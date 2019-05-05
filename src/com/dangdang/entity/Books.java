@@ -18,6 +18,10 @@ public class Books implements Serializable{
 	private BigDecimal dangPrice;
 
 	private String bookState;
+	
+	private String press;
+	
+	private String messages;
 
 	private Integer inventory;
 
@@ -56,6 +60,16 @@ public class Books implements Serializable{
 
 	public Integer getBookId() {
 		return bookId;
+	}
+	
+	
+
+	public String getMessages() {
+		return messages;
+	}
+
+	public void setMessages(String messages) {
+		this.messages = messages;
 	}
 
 	public void setBookId(Integer bookId) {
@@ -146,6 +160,13 @@ public class Books implements Serializable{
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	public String getPress() {
+		return press;
+	}
+	public void setPress(String press) {
+		this.press = press;
+	}
 
 	public Books(Integer bookId, Category category, String bookName,
 			BigDecimal bookPrice, BigDecimal dangPrice, String bookState,
@@ -172,7 +193,7 @@ public class Books implements Serializable{
 				+ ", dangPrice=" + dangPrice + ", bookState=" + bookState
 				+ ", inventory=" + inventory + ", author=" + author
 				+ ", customeScore=" + customeScore + ", productImage="
-				+ productImage + ", salenum=" + salenum + "]";
+				+ productImage + ", salenum=" + salenum +", press=" + press +", messages=" + messages + "]";
 	}
 
 }

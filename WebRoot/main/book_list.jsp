@@ -158,7 +158,7 @@
 							</h4>
 							<h4>
 								出版社：
-								<a href='#' name='出版社'>xxx出版社</a>
+								<a href='#' name='出版社'><s:property value="press"/></a>
 							</h4>
 							<h4>
 								出版时间：2009-01-01
@@ -173,7 +173,8 @@
 								节省：￥<s:property value="bookPrice-dangPrice"/>
 							</h6>
 							<span class="list_r_list_button"> 
-							<a href="#"> 
+							<a href='<s:url action="books_select" namespace="/public"/>
+							?books.bookId=<s:property value="bookId"/>'> 
 							<img src='../images/buttom_goumai.gif' /> </a>
 							<span id="cartinfo"></span>
 						</div>

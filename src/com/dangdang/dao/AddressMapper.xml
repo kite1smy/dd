@@ -23,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	<insert id="insert">
 		insert into address values(
-			0,#{receiveName},#{address},#{mobile},#{user.id},#{deleteState},#{selectedState}
+			0,#{receiveName},#{address},#{mobile},0,#{mobile},#{user.id},#{deleteState},#{selectedState}
 		)
 	</insert>
 	<update id="update">
